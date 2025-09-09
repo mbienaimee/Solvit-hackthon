@@ -10,9 +10,10 @@ import {
   SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { useAppStore } from "../stores/appStore";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
-  const { currentPage, setCurrentPage, sidebarOpen } = useAppStore();
+  const { sidebarOpen } = useAppStore();
 
   const navigationItems = [
     { id: "dashboard", name: "Dashboard", icon: HomeIcon },
@@ -42,21 +43,21 @@ const Sidebar = () => {
       <nav className="flex-1 px-4 py-4 space-y-2">
         {navigationItems.map((item) => {
           const Icon = item.icon;
-          const isActive = currentPage === item.id;
-
           return (
-            <button
+            <NavLink
               key={item.id}
-              onClick={() => setCurrentPage(item.id)}
-              className={`w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-blue-800 text-white"
-                  : "text-blue-200 hover:bg-blue-800 hover:text-white"
-              }`}
+              to={`/${item.id}`}
+              className={({ isActive }) =>
+                `w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-blue-800 text-white"
+                    : "text-blue-200 hover:bg-blue-800 hover:text-white"
+                }`
+              }
             >
               <Icon className="w-5 h-5 mr-3" />
               {sidebarOpen && <span>{item.name}</span>}
-            </button>
+            </NavLink>
           );
         })}
       </nav>
