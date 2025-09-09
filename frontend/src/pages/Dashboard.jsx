@@ -28,6 +28,7 @@ const Dashboard = () => {
     skillsLearned: 5,
   };
 
+  // ...existing code...
   const recentActivity = [
     {
       id: 1,
@@ -35,7 +36,7 @@ const Dashboard = () => {
       title: "Applied to Senior Frontend Engineer at Google",
       time: "2 hours ago",
       icon: BriefcaseIcon,
-      color: "text-blue-400",
+      color: "text-fuchsia-400",
     },
     {
       id: 2,
@@ -43,7 +44,7 @@ const Dashboard = () => {
       title: "Completed session with David Kim",
       time: "1 day ago",
       icon: AcademicCapIcon,
-      color: "text-green-400",
+      color: "text-pink-400",
     },
     {
       id: 3,
@@ -51,7 +52,7 @@ const Dashboard = () => {
       title: "Finished Advanced React Hooks course",
       time: "3 days ago",
       icon: BookOpenIcon,
-      color: "text-purple-400",
+      color: "text-violet-400",
     },
     {
       id: 4,
@@ -59,7 +60,7 @@ const Dashboard = () => {
       title: "Updated skills and experience",
       time: "1 week ago",
       icon: CheckCircleIcon,
-      color: "text-yellow-400",
+      color: "text-rose-400",
     },
   ];
 
@@ -88,7 +89,7 @@ const Dashboard = () => {
     <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
       <div className="flex items-center justify-between mb-4">
         <div className={`p-3 rounded-lg ${color} bg-opacity-20`}>
-          <Icon className={`w-6 h-6 ${color}`} />
+          {Icon && <Icon className={`w-6 h-6 ${color}`} />}
         </div>
         {trend && (
           <div className="flex items-center text-green-400 text-sm">
@@ -134,27 +135,27 @@ const Dashboard = () => {
           title="Jobs Applied"
           value={stats.appliedJobs}
           icon={BriefcaseIcon}
-          color="text-blue-400"
+          color="text-fuchsia-400"
           trend="+2 this week"
         />
         <StatCard
           title="Saved Jobs"
           value={stats.savedJobs}
           icon={BookOpenIcon}
-          color="text-red-400"
+          color="text-rose-400"
         />
         <StatCard
           title="Profile Views"
           value={stats.profileViews}
           icon={UserGroupIcon}
-          color="text-green-400"
+          color="text-pink-400"
           trend="+12 this week"
         />
         <StatCard
           title="Mentor Sessions"
           value={stats.mentorSessions}
           icon={AcademicCapIcon}
-          color="text-purple-400"
+          color="text-violet-400"
           subtitle="This month"
         />
       </div>
@@ -232,19 +233,19 @@ const Dashboard = () => {
             <div className="space-y-3">
               <button className="w-full text-left p-3 bg-gray-750 hover:bg-gray-700 rounded-lg transition-colors">
                 <div className="flex items-center space-x-3">
-                  <BriefcaseIcon className="w-5 h-5 text-blue-400" />
+                  <BriefcaseIcon className="w-5 h-5 text-fuchsia-400" />
                   <span className="text-white text-sm">Browse New Jobs</span>
                 </div>
               </button>
               <button className="w-full text-left p-3 bg-gray-750 hover:bg-gray-700 rounded-lg transition-colors">
                 <div className="flex items-center space-x-3">
-                  <AcademicCapIcon className="w-5 h-5 text-green-400" />
+                  <AcademicCapIcon className="w-5 h-5 text-pink-400" />
                   <span className="text-white text-sm">Find a Mentor</span>
                 </div>
               </button>
               <button className="w-full text-left p-3 bg-gray-750 hover:bg-gray-700 rounded-lg transition-colors">
                 <div className="flex items-center space-x-3">
-                  <BookOpenIcon className="w-5 h-5 text-purple-400" />
+                  <BookOpenIcon className="w-5 h-5 text-violet-400" />
                   <span className="text-white text-sm">Start Learning</span>
                 </div>
               </button>
@@ -268,7 +269,7 @@ const Dashboard = () => {
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                className="bg-fuchsia-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${user.profileCompletion}%` }}
               />
             </div>
@@ -282,7 +283,7 @@ const Dashboard = () => {
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div
-                className="bg-green-600 h-2 rounded-full transition-all duration-500"
+                className="bg-pink-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${user.trustScore}%` }}
               />
             </div>
@@ -296,7 +297,7 @@ const Dashboard = () => {
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div
-                className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                className="bg-violet-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${user.marketReadiness}%` }}
               />
             </div>
