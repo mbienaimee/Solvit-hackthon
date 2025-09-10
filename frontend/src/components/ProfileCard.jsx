@@ -6,9 +6,9 @@ const ProfileCard = () => {
   const { user } = useUserStore();
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+    <div className="bg-custom-card rounded-lg p-6 border border-custom-accent">
       <div className="flex items-center space-x-4 mb-4">
-        <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center">
+        <div className="w-16 h-16 bg-custom-accent rounded-full flex items-center justify-center">
           <UserIcon className="w-8 h-8 text-white" />
         </div>
         <div className="flex-1">
@@ -29,7 +29,7 @@ const ProfileCard = () => {
         </div>
         <div className="w-full bg-gray-700 rounded-full h-2">
           <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            className="bg-custom-accent h-2 rounded-full transition-all duration-300"
             style={{ width: `${user.profileCompletion}%` }}
           />
         </div>
@@ -89,7 +89,7 @@ const ProfileCard = () => {
         </div>
       </div>
 
-      <button className="w-full mt-4 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+      <button className="w-full mt-4 py-2 px-4 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg transition-colors">
         Complete Profile
       </button>
     </div>

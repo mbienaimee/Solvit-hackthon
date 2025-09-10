@@ -26,7 +26,7 @@ function App() {
   // Theme classes
   const isDark = theme === 'dark';
   const themeClasses = isDark
-    ? 'min-h-screen bg-gray-900 text-white'
+    ? 'min-h-screen bg-custom-dark text-white'
     : 'min-h-screen bg-blue-50 text-blue-900';
 
   return (

@@ -30,11 +30,15 @@ const Sidebar = () => {
       {/* Logo */}
       <div className="flex items-center justify-center h-16 px-4">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-blue-400 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">S</span>
+          <div className="w-8 h-8 bg-custom-dark rounded-lg flex items-center justify-center">
+            <img 
+              src="/diament-removebg-preview.png" 
+              alt="DIAMENT Logo" 
+              className="w-6 h-6 object-contain"
+            />
           </div>
           {sidebarOpen && (
-            <span className="text-white font-bold text-xl">SOLVIT</span>
+            <span className="text-white font-bold text-xl">DIAMENT</span>
           )}
         </div>
       </div>
@@ -50,8 +54,8 @@ const Sidebar = () => {
               className={({ isActive }) =>
                 `w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-blue-800 text-white"
-                    : "text-blue-200 hover:bg-blue-800 hover:text-white"
+                    ? "bg-custom-dark text-white"
+                    : "text-gray-200 hover:bg-custom-dark hover:text-white"
                 }`
               }
             >
@@ -66,7 +70,7 @@ const Sidebar = () => {
       <div className="p-4">
         <button 
           onClick={toggleAIChat}
-          className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+          className="w-full flex items-center justify-center px-4 py-3 bg-custom-dark hover:bg-opacity-80 text-white rounded-lg transition-colors"
         >
           <SparklesIcon className="w-5 h-5 mr-2" />
           {sidebarOpen && <span>AI Assistant</span>}

@@ -2,9 +2,17 @@ import OpenAI from 'openai';
 
 class AIService {
   constructor() {
+    // Ensure API key is available
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error('OpenAI API key is required. Please set OPENAI_API_KEY in your .env file.');
+    }
+    
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: apiKey,
     });
+    
+    console.log('✅ OpenAI client initialized successfully');
     
     // Conversation context for career guidance
     this.systemPrompt = `You are an AI career assistant designed to help users find suitable job roles and career guidance. Your role is to:

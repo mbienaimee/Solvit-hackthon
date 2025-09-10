@@ -56,9 +56,9 @@ const Notifications = () => {
       case "job_match":
         return "text-green-400 bg-green-400 bg-opacity-20";
       case "mentor_response":
-        return "text-blue-400 bg-blue-400 bg-opacity-20";
+        return "text-custom-accent bg-custom-accent bg-opacity-20";
       case "course_recommendation":
-        return "text-purple-400 bg-purple-400 bg-opacity-20";
+        return "text-custom-tertiary bg-custom-tertiary bg-opacity-20";
       default:
         return "text-gray-400 bg-gray-400 bg-opacity-20";
     }
@@ -92,8 +92,8 @@ const Notifications = () => {
 
   const NotificationCard = ({ notification }) => (
     <div
-      className={`bg-gray-800 rounded-xl p-6 border transition-all duration-200 ${
-        notification.read ? "border-gray-700" : "border-gray-600 bg-gray-750"
+      className={`bg-custom-card rounded-xl p-6 border transition-all duration-200 ${
+        notification.read ? "border-custom-accent border-opacity-50" : "border-custom-accent bg-custom-accent bg-opacity-5"
       }`}
     >
       <div className="flex items-start space-x-4">
@@ -168,12 +168,12 @@ const Notifications = () => {
         <div className="flex items-center space-x-3">
           <button
             onClick={markAllAsRead}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-2"
+            className="px-4 py-2 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-2"
           >
             <CheckIcon className="w-4 h-4" />
             <span>Mark All Read</span>
           </button>
-          <button className="px-4 py-2 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2">
+          <button className="px-4 py-2 border border-custom-accent text-custom-accent hover:bg-custom-accent hover:bg-opacity-20 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2">
             <ArchiveBoxIcon className="w-4 h-4" />
             <span>Archive All</span>
           </button>
@@ -182,26 +182,26 @@ const Notifications = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-blue-400 mb-2">
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-accent mb-2">
             {notifications.length}
           </div>
           <div className="text-gray-400">Total Notifications</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-red-400 mb-2">
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-secondary mb-2">
             {notifications.filter((n) => !n.read).length}
           </div>
           <div className="text-gray-400">Unread</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-green-400 mb-2">
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-tertiary mb-2">
             {notifications.filter((n) => n.type === "job_match").length}
           </div>
           <div className="text-gray-400">Job Matches</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-purple-400 mb-2">
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-quaternary mb-2">
             {notifications.filter((n) => n.type === "mentor_response").length}
           </div>
           <div className="text-gray-400">Mentorship</div>
@@ -216,8 +216,8 @@ const Notifications = () => {
             onClick={() => setFilter(filterOption.id)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filter === filterOption.id
-                ? "bg-blue-600 text-white"
-                : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                ? "bg-custom-accent text-white"
+                : "bg-custom-secondary bg-opacity-20 text-custom-secondary hover:bg-custom-secondary hover:bg-opacity-30"
             }`}
           >
             {filterOption.label} ({filterOption.count})
@@ -252,7 +252,7 @@ const Notifications = () => {
       {/* Load More */}
       {filteredNotifications.length > 0 && (
         <div className="text-center">
-          <button className="px-6 py-3 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg font-medium transition-colors">
+          <button className="px-6 py-3 border border-custom-accent text-custom-accent hover:bg-custom-accent hover:bg-opacity-20 rounded-lg font-medium transition-colors">
             Load More Notifications
           </button>
         </div>

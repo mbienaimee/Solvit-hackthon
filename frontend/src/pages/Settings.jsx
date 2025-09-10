@@ -51,7 +51,7 @@ const Settings = () => {
   };
 
   const SettingSection = ({ title, children }) => (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+    <div className="bg-custom-card rounded-xl p-6 border border-custom-accent">
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
       {children}
     </div>
@@ -72,7 +72,7 @@ const Settings = () => {
           onChange={(e) => onChange(e.target.checked)}
           className="sr-only peer"
         />
-        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-custom-accent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-custom-accent"></div>
       </label>
     </div>
   );
@@ -86,7 +86,7 @@ const Settings = () => {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-custom-accent"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -116,7 +116,7 @@ const Settings = () => {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-custom-accent"
         />
         {type === "password" && (
           <button
@@ -146,7 +146,7 @@ const Settings = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-gray-800 p-1 rounded-xl">
+      <div className="flex space-x-1 bg-custom-card p-1 rounded-xl border border-custom-accent">
         {[
           { id: "profile", label: "Profile", icon: UserIcon },
           { id: "notifications", label: "Notifications", icon: BellIcon },
@@ -160,8 +160,8 @@ const Settings = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg transition-all duration-200 ${
                 activeTab === tab.id
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-400 hover:text-white hover:bg-gray-700"
+                  ? "bg-custom-accent text-white"
+                  : "text-gray-400 hover:text-white hover:bg-custom-secondary"
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -232,7 +232,7 @@ const Settings = () => {
               />
             </div>
             <div className="mt-6 flex space-x-4">
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+              <button className="px-4 py-2 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg font-medium transition-colors">
                 Update Password
               </button>
               <button className="px-4 py-2 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg font-medium transition-colors">
@@ -426,7 +426,7 @@ const Settings = () => {
                 Download a copy of your data including profile information, job
                 applications, and learning progress.
               </p>
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center space-x-2">
+              <button className="px-4 py-2 bg-custom-accent hover:bg-custom-tertiary text-white rounded-lg font-medium transition-colors flex items-center space-x-2">
                 <ArrowDownTrayIcon className="w-4 h-4" />
                 <span>Export My Data</span>
               </button>
@@ -437,7 +437,7 @@ const Settings = () => {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+        <button className="px-6 py-3 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg font-medium transition-colors">
           Save Changes
         </button>
       </div>

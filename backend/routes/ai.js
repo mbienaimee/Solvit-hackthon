@@ -3,8 +3,24 @@ import AIService from '../services/aiService.js';
 import CareerService from '../services/careerService.js';
 
 const router = express.Router();
-const aiService = new AIService();
-const careerService = new CareerService();
+
+// Initialize services lazily
+let aiService = null;
+let careerService = null;
+
+const getAIService = () => {
+  if (!aiService) {
+    aiService = new AIService();
+  }
+  return aiService;
+};
+
+const getCareerService = () => {
+  if (!careerService) {
+    careerService = new CareerService();
+  }
+  return careerService;
+};
 
 // Store conversation sessions (in production, use a database)
 const conversationSessions = new Map();
@@ -30,7 +46,7 @@ router.post('/chat', async (req, res) => {
     messages.push(userMessage);
 
     // Generate AI response
-    const aiResponse = await aiService.generateResponse(messages, userProfile);
+    const aiResponse = await getAIService().generateResponse(messages, userProfile);
     
     const aiMessage = {
       type: 'ai',
@@ -45,8 +61,8 @@ router.post('/chat', async (req, res) => {
     // Analyze conversation for career recommendations
     let recommendations = null;
     if (messages.length >= 4) { // After some conversation
-      const analysisData = aiService.analyzeUserProfile(messages);
-      recommendations = careerService.getCareerRecommendations(userProfile || {}, analysisData);
+      const analysisData = getAIService().analyzeUserProfile(messages);
+      recommendations = getCareerService().getCareerRecommendations(userProfile || {}, analysisData);
     }
 
     res.json({
@@ -75,10 +91,10 @@ router.post('/recommendations', async (req, res) => {
 
     // Get conversation context if available
     const messages = conversationSessions.get(sessionId) || [];
-    const analysisData = aiService.analyzeUserProfile(messages);
+    const analysisData = getAIService().analyzeUserProfile(messages);
 
     // Generate recommendations
-    const recommendations = careerService.getCareerRecommendations(userProfile || {}, analysisData);
+    const recommendations = getCareerService().getCareerRecommendations(userProfile || {}, analysisData);
 
     res.json(recommendations);
 
@@ -98,7 +114,7 @@ router.get('/jobs/search', async (req, res) => {
     if (level) filters.level = level;
     if (skills) filters.skills = skills.split(',').map(s => s.trim());
 
-    const jobs = careerService.searchJobs(query, filters);
+    const jobs = getCareerService().searchJobs(query, filters);
 
     res.json({ jobs });
 
@@ -116,9 +132,9 @@ router.post('/resources', async (req, res) => {
     let resources = [];
     
     if (jobTitle) {
-      resources = careerService.getLearningRecommendations({}, [{ title: jobTitle }]);
+      resources = getCareerService().getLearningRecommendations({}, [{ title: jobTitle }]);
     } else if (skills && skills.length > 0) {
-      resources = careerService.getLearningRecommendations({ skills }, []);
+      resources = getCareerService().getLearningRecommendations({ skills }, []);
     }
 
     res.json({ resources });
@@ -135,7 +151,7 @@ router.post('/mentorship', async (req, res) => {
     const { jobTitles } = req.body;
 
     const jobs = jobTitles ? jobTitles.map(title => ({ title })) : [];
-    const mentors = careerService.getMentorshipRecommendations(jobs);
+    const mentors = getCareerService().getMentorshipRecommendations(jobs);
 
     res.json({ mentors });
 

@@ -133,7 +133,7 @@ const Dashboard = () => {
   ];
 
   const StatCard = ({ title, value, icon: Icon, color, trend, subtitle }) => (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
+    <div className="bg-custom-card rounded-xl p-6 border border-custom-accent hover:border-opacity-80 transition-all duration-200">
       <div className="flex items-center justify-between mb-4">
         <div className={`p-3 rounded-lg ${color} bg-opacity-20`}>
           {Icon && <Icon className={`w-6 h-6 ${color}`} />}
@@ -156,7 +156,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white bounce-in">
+      <div className="rounded-2xl p-8 text-white bounce-in" style={{ backgroundColor: '#8EA604' }}>
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">
@@ -227,26 +227,26 @@ const Dashboard = () => {
           </div>
         ) : aiInsights ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+            <div className="bg-custom-card rounded-lg p-4 border border-custom-accent">
               <div className="flex items-center space-x-2 mb-2">
-                <ChartBarIcon className="w-5 h-5 text-blue-400" />
-                <h3 className="text-sm font-medium text-blue-400">Market Trend</h3>
+                <ChartBarIcon className="w-5 h-5 text-custom-accent" />
+                <h3 className="text-sm font-medium text-custom-accent">Market Trend</h3>
               </div>
               <p className="text-gray-200 text-sm">{aiInsights.trend}</p>
             </div>
             
-            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+            <div className="bg-custom-card rounded-lg p-4 border border-custom-accent">
               <div className="flex items-center space-x-2 mb-2">
-                <AcademicCapIcon className="w-5 h-5 text-purple-400" />
-                <h3 className="text-sm font-medium text-purple-400">Skill Focus</h3>
+                <AcademicCapIcon className="w-5 h-5 text-custom-secondary" />
+                <h3 className="text-sm font-medium text-custom-secondary">Skill Focus</h3>
               </div>
               <p className="text-gray-200 text-sm">{aiInsights.skill}</p>
             </div>
             
-            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+            <div className="bg-custom-card rounded-lg p-4 border border-custom-accent">
               <div className="flex items-center space-x-2 mb-2">
-                <ArrowTrendingUpIcon className="w-5 h-5 text-green-400" />
-                <h3 className="text-sm font-medium text-green-400">Career Tip</h3>
+                <ArrowTrendingUpIcon className="w-5 h-5 text-custom-tertiary" />
+                <h3 className="text-sm font-medium text-custom-tertiary">Career Tip</h3>
               </div>
               <p className="text-gray-200 text-sm">{aiInsights.tip}</p>
             </div>
@@ -261,12 +261,12 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Recent Activity */}
         <div className="lg:col-span-2">
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-custom-card rounded-xl p-6 border border-custom-accent">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-white">
                 Recent Activity
               </h2>
-              <button className="text-blue-400 hover:text-blue-300 text-sm">
+              <button className="text-custom-accent hover:text-custom-secondary text-sm">
                 View All
               </button>
             </div>
@@ -298,10 +298,10 @@ const Dashboard = () => {
 
         {/* Upcoming Events */}
         <div>
-          <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-custom-card rounded-xl p-6 border border-custom-accent">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-white">Upcoming</h2>
-              <ClockIcon className="w-5 h-5 text-gray-400" />
+              <ClockIcon className="w-5 h-5 text-custom-secondary" />
             </div>
             <div className="space-y-4">
               {upcomingEvents.map((event) => (
@@ -316,7 +316,7 @@ const Dashboard = () => {
                       </p>
                       <p className="text-gray-400 text-xs mt-1">{event.time}</p>
                     </div>
-                    <div className="w-2 h-2 bg-blue-400 rounded-full mt-2"></div>
+                    <div className="w-2 h-2 bg-custom-accent rounded-full mt-2"></div>
                   </div>
                 </div>
               ))}
@@ -324,7 +324,7 @@ const Dashboard = () => {
           </div>
 
           {/* Quick Actions */}
-          <div className="mt-6 bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="mt-6 bg-custom-card rounded-xl p-6 border border-custom-accent">
             <h3 className="text-lg font-semibold text-white mb-4">
               Quick Actions
             </h3>
@@ -353,7 +353,7 @@ const Dashboard = () => {
       </div>
 
       {/* Progress Overview */}
-      <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+      <div className="bg-custom-card rounded-xl p-6 border border-custom-accent">
         <h2 className="text-xl font-semibold text-white mb-6">
           Your Progress Overview
         </h2>
@@ -367,7 +367,7 @@ const Dashboard = () => {
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div
-                className="bg-fuchsia-600 h-2 rounded-full transition-all duration-500"
+                className="bg-custom-accent h-2 rounded-full transition-all duration-500"
                 style={{ width: `${user.profileCompletion}%` }}
               />
             </div>
@@ -381,7 +381,7 @@ const Dashboard = () => {
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div
-                className="bg-pink-600 h-2 rounded-full transition-all duration-500"
+                className="bg-custom-secondary h-2 rounded-full transition-all duration-500"
                 style={{ width: `${user.trustScore}%` }}
               />
             </div>
@@ -395,7 +395,7 @@ const Dashboard = () => {
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div
-                className="bg-violet-600 h-2 rounded-full transition-all duration-500"
+                className="bg-custom-tertiary h-2 rounded-full transition-all duration-500"
                 style={{ width: `${user.marketReadiness}%` }}
               />
             </div>

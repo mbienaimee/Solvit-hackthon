@@ -5,7 +5,7 @@ import { dummyCourses } from "../data/dummyData";
 
 const SuggestedCourses = () => {
   return (
-    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+    <div className="bg-custom-card rounded-lg p-6 border border-custom-accent">
       <div className="flex items-center space-x-3 mb-4">
         <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
           <BookOpenIcon className="w-5 h-5 text-white" />
