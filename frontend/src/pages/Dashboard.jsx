@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChartBarIcon,
   BriefcaseIcon,
@@ -8,14 +8,62 @@ import {
   UserGroupIcon,
   ClockIcon,
   CheckCircleIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { useUserStore } from "../stores/userStore";
 import { useJobStore } from "../stores/jobStore";
+import { useAppStore } from "../stores/appStore";
 import { dummyJobs, dummyCourses, dummyMentors } from "../data/dummyData";
+import LoadingSpinner from "../components/LoadingSpinner";
+import apiService from "../services/apiService";
 
 const Dashboard = () => {
   const { user } = useUserStore();
   const { savedJobs, appliedJobs } = useJobStore();
+  const { lastRecommendations } = useAppStore();
+  const [aiInsights, setAiInsights] = useState(null);
+  const [isLoadingInsights, setIsLoadingInsights] = useState(false);
+
+  useEffect(() => {
+    const loadAIInsights = async () => {
+      if (!user?.email || !user?.title) return;
+      
+      setIsLoadingInsights(true);
+      try {
+        // Get AI insights for dashboard overview
+        const insights = await apiService.getChatResponse([
+          {
+            role: 'user',
+            content: `As a career assistant, provide a brief summary of career insights for a ${user.title} including: 1) One key market trend, 2) One skill recommendation, 3) One career tip. Keep each point to one sentence. Format as JSON with keys: trend, skill, tip.`
+          }
+        ]);
+        
+        // Try to parse as JSON, fallback to text if needed
+        try {
+          const parsed = JSON.parse(insights);
+          setAiInsights(parsed);
+        } catch {
+          // If not valid JSON, create a structured response
+          setAiInsights({
+            trend: "AI and automation continue to reshape the tech industry.",
+            skill: "Focus on developing machine learning fundamentals.",
+            tip: "Network with professionals in emerging technology sectors."
+          });
+        }
+      } catch (error) {
+        console.error('Error loading AI insights:', error);
+        setAiInsights({
+          trend: "Remote work opportunities continue to expand globally.",
+          skill: "Enhance your communication and collaboration skills.",
+          tip: "Keep your skills updated with latest industry trends."
+        });
+      } finally {
+        setIsLoadingInsights(false);
+      }
+    };
+
+    loadAIInsights();
+  }, [user?.email, user?.title]);
 
   const stats = {
     totalJobs: dummyJobs.length,
@@ -160,6 +208,54 @@ const Dashboard = () => {
           color="text-violet-400"
           subtitle="This month"
         />
+      </div>
+
+      {/* AI Insights Section */}
+      <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/30 rounded-xl p-6 fade-in">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <SparklesIcon className="w-6 h-6 text-blue-400" />
+            <h2 className="text-xl font-semibold text-white">AI Career Insights</h2>
+          </div>
+          <span className="text-sm text-gray-400">Personalized for you</span>
+        </div>
+        
+        {isLoadingInsights ? (
+          <div className="flex items-center justify-center py-8">
+            <LoadingSpinner />
+            <span className="ml-2 text-gray-400">Loading insights...</span>
+          </div>
+        ) : aiInsights ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+              <div className="flex items-center space-x-2 mb-2">
+                <ChartBarIcon className="w-5 h-5 text-blue-400" />
+                <h3 className="text-sm font-medium text-blue-400">Market Trend</h3>
+              </div>
+              <p className="text-gray-200 text-sm">{aiInsights.trend}</p>
+            </div>
+            
+            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+              <div className="flex items-center space-x-2 mb-2">
+                <AcademicCapIcon className="w-5 h-5 text-purple-400" />
+                <h3 className="text-sm font-medium text-purple-400">Skill Focus</h3>
+              </div>
+              <p className="text-gray-200 text-sm">{aiInsights.skill}</p>
+            </div>
+            
+            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+              <div className="flex items-center space-x-2 mb-2">
+                <ArrowTrendingUpIcon className="w-5 h-5 text-green-400" />
+                <h3 className="text-sm font-medium text-green-400">Career Tip</h3>
+              </div>
+              <p className="text-gray-200 text-sm">{aiInsights.tip}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-400">AI insights will appear here once you complete your profile.</p>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

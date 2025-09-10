@@ -14,6 +14,8 @@ export const useAppStore = create((set) => ({
   // AI Assistant state
   aiChatOpen: false,
   aiMessages: [],
+  isAILoading: false,
+  lastRecommendations: null,
 
   toggleAIChat: () => set((state) => ({ aiChatOpen: !state.aiChatOpen })),
 
@@ -22,7 +24,13 @@ export const useAppStore = create((set) => ({
       aiMessages: [...state.aiMessages, message],
     })),
 
+  setAIMessages: (messages) => set({ aiMessages: messages }),
+
   clearAIMessages: () => set({ aiMessages: [] }),
+
+  setAILoading: (loading) => set({ isAILoading: loading }),
+
+  setLastRecommendations: (recommendations) => set({ lastRecommendations: recommendations }),
 
   // Notifications
   notifications: [],
