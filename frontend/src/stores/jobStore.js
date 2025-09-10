@@ -117,4 +117,16 @@ export const useJobStore = create((set, get) => ({
 
   isJobSaved: (jobId) => get().savedJobs.includes(jobId),
   isJobApplied: (jobId) => get().appliedJobs.includes(jobId),
+
+  fetchJobsFromAPI: async () => {
+    try {
+      const res = await fetch('https://arbeitnow.com/api/job-board-api');
+      const data = await res.json();
+      if (data && data.data) {
+        set({ jobs: data.data, filteredJobs: data.data });
+      }
+    } catch (err) {
+      console.error('Failed to fetch jobs:', err);
+    }
+  },
 }));

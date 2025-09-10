@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useJobStore } from "../stores/jobStore";
 import { useUserStore } from "../stores/userStore";
@@ -7,8 +7,12 @@ import SearchAndFilters from "./SearchAndFilters";
 import RightSidebar from "./RightSidebar";
 
 const JobFeed = () => {
-  const { filteredJobs } = useJobStore();
+  const { filteredJobs, fetchJobsFromAPI } = useJobStore();
   const { user } = useUserStore();
+
+  useEffect(() => {
+    fetchJobsFromAPI();
+  }, [fetchJobsFromAPI]);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -45,7 +49,7 @@ const JobFeed = () => {
         <div className="mt-6 md:mt-8">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
             {filteredJobs.map((job) => (
-              <JobCard key={job.id} job={job} />
+              <JobCard key={job.slug || job.id} job={job} />
             ))}
           </div>
 

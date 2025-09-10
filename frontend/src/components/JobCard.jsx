@@ -4,31 +4,25 @@ import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import { useJobStore } from "../stores/jobStore";
 
 const JobCard = ({ job }) => {
-  const { saveJob, unsaveJob, applyToJob, isJobSaved, isJobApplied } =
-    useJobStore();
+  const { saveJob, unsaveJob, applyToJob, isJobSaved, isJobApplied } = useJobStore();
 
-  const isSaved = isJobSaved(job.id);
-  const isApplied = isJobApplied(job.id);
+  // Use slug as unique id for API jobs
+  const jobId = job.slug || job.id;
+  const isSaved = isJobSaved(jobId);
+  const isApplied = isJobApplied(jobId);
 
   const handleSave = () => {
     if (isSaved) {
-      unsaveJob(job.id);
+      unsaveJob(jobId);
     } else {
-      saveJob(job.id);
+      saveJob(jobId);
     }
   };
 
   const handleApply = () => {
     if (!isApplied) {
-      applyToJob(job.id);
+      applyToJob(jobId);
     }
-  };
-
-  const getMatchColor = (match) => {
-    if (match >= 90) return "text-green-400";
-    if (match >= 80) return "text-blue-400";
-    if (match >= 70) return "text-yellow-400";
-    return "text-gray-400";
   };
 
   return (
@@ -37,16 +31,13 @@ const JobCard = ({ job }) => {
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
           <img
-            src={job.companyLogo}
-            alt={job.company}
+            src={job.company_logo || `https://ui-avatars.com/api/?name=${job.company_name}&background=3B82F6&color=fff&size=48`}
+            alt={job.company_name}
             className="w-12 h-12 rounded-lg object-cover"
-            onError={(e) => {
-              e.target.src = `https://ui-avatars.com/api/?name=${job.company}&background=3B82F6&color=fff&size=48`;
-            }}
           />
           <div>
             <h3 className="text-lg font-semibold text-white">{job.title}</h3>
-            <p className="text-gray-400">{job.company}</p>
+            <p className="text-gray-400">{job.company_name}</p>
           </div>
         </div>
         <button
@@ -72,59 +63,32 @@ const JobCard = ({ job }) => {
           )}
         </div>
         <div className="flex items-center text-sm text-gray-400">
-          <span>💰 {job.salary}</span>
+          <span>💰 {job.salary || 'N/A'}</span>
           <span className="mx-2">•</span>
-          <span>📅 {job.posted}</span>
+          <span>📅 {job.created_at ? new Date(job.created_at).toLocaleDateString() : 'N/A'}</span>
         </div>
         <div className="flex items-center text-sm">
-          <span className="text-gray-400">Level: </span>
-          <span className="ml-1 text-white">{job.level}</span>
-          <span className="mx-2 text-gray-400">•</span>
-          <span className="text-gray-400">Industry: </span>
-          <span className="ml-1 text-white">{job.industry}</span>
+          <span className="text-gray-400">Category: </span>
+          <span className="ml-1 text-white">{job.category || 'N/A'}</span>
         </div>
       </div>
 
-      {/* Skills */}
+      {/* Tags */}
       <div className="mb-4">
         <div className="flex flex-wrap gap-2">
-          {job.skills.slice(0, 3).map((skill, index) => (
+          {job.tags && job.tags.slice(0, 3).map((tag, index) => (
             <span
               key={index}
               className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded"
             >
-              {skill}
+              {tag}
             </span>
           ))}
-          {job.skills.length > 3 && (
+          {job.tags && job.tags.length > 3 && (
             <span className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
-              +{job.skills.length - 3} more
+              +{job.tags.length - 3} more
             </span>
           )}
-        </div>
-      </div>
-
-      {/* Match Score */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-400">Match Score:</span>
-          <span className={`font-semibold ${getMatchColor(job.match)}`}>
-            {job.match}%
-          </span>
-        </div>
-        <div className="w-16 h-2 bg-gray-700 rounded-full overflow-hidden">
-          <div
-            className={`h-full ${
-              job.match >= 90
-                ? "bg-green-400"
-                : job.match >= 80
-                ? "bg-blue-400"
-                : job.match >= 70
-                ? "bg-yellow-400"
-                : "bg-gray-500"
-            }`}
-            style={{ width: `${job.match}%` }}
-          />
         </div>
       </div>
 
@@ -135,19 +99,19 @@ const JobCard = ({ job }) => {
 
       {/* Actions */}
       <div className="flex space-x-3 text-sm">
-        <button
-          onClick={handleApply}
-          disabled={isApplied}
-          className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-            isApplied
-              ? "bg-green-600 text-white cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700 text-white"
-          }`}
+        <a
+          href={job.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 py-2 px-4 rounded-lg font-medium transition-colors bg-blue-600 hover:bg-blue-700 text-white text-center"
         >
-          {isApplied ? "Applied" : "Apply Now"}
-        </button>
-        <button className="px-4 py-2 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors">
-          View Details
+          View & Apply
+        </a>
+        <button
+          onClick={handleSave}
+          className="px-4 py-2 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors"
+        >
+          {isSaved ? 'Saved' : 'Save Job'}
         </button>
       </div>
     </div>

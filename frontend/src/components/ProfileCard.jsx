@@ -61,7 +61,7 @@ const ProfileCard = () => {
       <div className="mb-4">
         <h4 className="text-sm font-medium text-white mb-2">Skills</h4>
         <div className="flex flex-wrap gap-1">
-          {user.skills.slice(0, 4).map((skill, index) => (
+          {(user.skills || []).slice(0, 4).map((skill, index) => (
             <span
               key={index}
               className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded"
@@ -69,7 +69,7 @@ const ProfileCard = () => {
               {skill}
             </span>
           ))}
-          {user.skills.length > 4 && (
+          {user.skills && user.skills.length > 4 && (
             <span className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
               +{user.skills.length - 4}
             </span>

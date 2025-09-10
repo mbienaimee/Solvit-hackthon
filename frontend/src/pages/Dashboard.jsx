@@ -28,7 +28,6 @@ const Dashboard = () => {
     skillsLearned: 5,
   };
 
-  // ...existing code...
   const recentActivity = [
     {
       id: 1,
@@ -113,9 +112,12 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">
-              Welcome back, {user.name.split(" ")[0]}! 👋
+              Welcome back, {user.name ? user.name : 'User'}! 👋
             </h1>
             <p className="text-blue-100 text-lg">
+              Email: {user.email ? user.email : 'Not available'}
+            </p>
+            <p className="text-blue-100 text-lg mt-2">
               Your journey to European opportunities continues. Here's your
               progress.
             </p>

@@ -1,14 +1,46 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../stores/appStore';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserStore } from '../stores/userStore';
 
 const Signin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
+  const setUser = useUserStore((state) => state.setUser);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add authentication logic here
+    setError('');
+    setSuccess('');
+    try {
+      const res = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSuccess('Login successful! Redirecting...');
+        setUser({
+          name: data.user.username,
+          email: data.user.email,
+          // Add other fields if returned from backend
+        });
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1200);
+        setEmail('');
+        setPassword('');
+        // Optionally, save token: localStorage.setItem('token', data.token);
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch {
+      setError('Network error');
+    }
   };
 
   const { theme, setTheme } = useAppStore();
@@ -71,6 +103,8 @@ const Signin = () => {
             Sign In
           </button>
         </form>
+        {error && <div className="text-red-500 mt-2">{error}</div>}
+        {success && <div className="text-green-500 mt-2">{success}</div>}
         <p className="mt-6 text-center text-gray-600">
           Don't have an account? <Link to="/signup" className="text-blue-600 font-semibold hover:underline">Sign Up</Link>
         </p>
