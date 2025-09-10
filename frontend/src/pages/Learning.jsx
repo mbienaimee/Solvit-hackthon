@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BookOpenIcon,
   PlayIcon,
@@ -8,13 +8,24 @@ import {
   TrophyIcon,
   AcademicCapIcon,
   ChartBarIcon,
+  ArrowTopRightOnSquareIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon as StarSolidIcon } from "@heroicons/react/24/solid";
 import { dummyCourses } from "../data/dummyData";
+import { useAppStore } from "../stores/appStore";
+import { useUserStore } from "../stores/userStore";
+import apiService from "../services/apiService";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Learning = () => {
   const [activeTab, setActiveTab] = useState("recommended");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [aiRecommendations, setAiRecommendations] = useState([]);
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+  
+  const { lastRecommendations } = useAppStore();
+  const { user } = useUserStore();
 
   const categories = [
     { id: "all", name: "All Courses", count: 24 },
@@ -76,6 +87,107 @@ const Learning = () => {
       total: 7,
     },
   ];
+
+  // Load AI recommendations when tab changes or user data is available
+  useEffect(() => {
+    const loadAIRecommendations = async () => {
+      setIsLoadingRecommendations(true);
+      try {
+        // Try to get recommendations from recent conversation first
+        if (lastRecommendations?.resources) {
+          setAiRecommendations(lastRecommendations.resources);
+        } else {
+          // Get recommendations based on user skills
+          const response = await apiService.getLearningResources(null, user?.skills);
+          setAiRecommendations(response.resources || []);
+        }
+      } catch (error) {
+        console.error('Error loading AI recommendations:', error);
+        setAiRecommendations([]);
+      } finally {
+        setIsLoadingRecommendations(false);
+      }
+    };
+
+    if (activeTab === "recommended" && user?.skills) {
+      loadAIRecommendations();
+    }
+  }, [activeTab, user?.skills, lastRecommendations?.resources]);
+
+  const ResourceCard = ({ resource }) => (
+    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-white mb-2">
+            {resource.title}
+          </h3>
+          <p className="text-gray-400 text-sm mb-2">{resource.provider}</p>
+          <div className="flex items-center space-x-4 text-sm text-gray-400">
+            {resource.duration && (
+              <div className="flex items-center space-x-1">
+                <ClockIcon className="w-4 h-4" />
+                <span>{resource.duration}</span>
+              </div>
+            )}
+            {resource.type && (
+              <div className="flex items-center space-x-1">
+                <BookOpenIcon className="w-4 h-4" />
+                <span className="capitalize">{resource.type}</span>
+              </div>
+            )}
+            {resource.rating && (
+              <div className="flex items-center space-x-1">
+                <StarSolidIcon className="w-4 h-4 text-yellow-400" />
+                <span>{resource.rating}</span>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="text-right">
+          <div className={`text-lg font-bold ${
+            resource.price === 'Free' || resource.price === 'Free online'
+              ? 'text-green-400'
+              : 'text-white'
+          }`}>
+            {resource.price || 'Varied'}
+          </div>
+          {resource.url && (
+            <a
+              href={resource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-blue-400 hover:text-blue-300 text-sm mt-1"
+            >
+              <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-1" />
+              Visit
+            </a>
+          )}
+        </div>
+      </div>
+
+      <p className="text-gray-300 text-sm mb-4">{resource.description}</p>
+
+      <div className="flex justify-between items-center">
+        <div className={`px-3 py-1 rounded-full text-xs ${
+          resource.price === 'Free' || resource.price === 'Free online'
+            ? 'bg-green-600 text-green-100'
+            : resource.price === 'Paid'
+            ? 'bg-blue-600 text-blue-100'
+            : 'bg-gray-600 text-gray-300'
+        }`}>
+          {resource.price || 'Varied Price'}
+        </div>
+        {resource.url && (
+          <button
+            onClick={() => window.open(resource.url, '_blank')}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+          >
+            Start Learning
+          </button>
+        )}
+      </div>
+    </div>
+  );
 
   const CourseCard = ({ course, isMyCourse = false }) => (
     <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
@@ -297,6 +409,32 @@ const Learning = () => {
       {/* Tab Content */}
       {activeTab === "recommended" && (
         <div className="space-y-6">
+          {/* AI Recommendations Section */}
+          {aiRecommendations.length > 0 && (
+            <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/30 rounded-xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <SparklesIcon className="w-6 h-6 text-blue-400" />
+                  <h2 className="text-xl font-semibold text-white">AI-Powered Recommendations</h2>
+                </div>
+                <span className="text-sm text-gray-400">Based on your profile and goals</span>
+              </div>
+              
+              {isLoadingRecommendations ? (
+                <div className="flex items-center justify-center py-8">
+                  <LoadingSpinner />
+                  <span className="ml-2 text-gray-400">Loading personalized recommendations...</span>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {aiRecommendations.slice(0, 6).map((resource, index) => (
+                    <ResourceCard key={index} resource={resource} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Categories */}
           <div className="flex flex-wrap gap-3">
             {categories.map((category) => (
@@ -314,11 +452,14 @@ const Learning = () => {
             ))}
           </div>
 
-          {/* Courses Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dummyCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
+          {/* General Courses Grid */}
+          <div>
+            <h3 className="text-xl font-semibold text-white mb-4">Browse All Courses</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {dummyCourses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
           </div>
         </div>
       )}

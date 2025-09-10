@@ -1,10 +1,11 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import MobileHeader from "./MobileHeader";
+import AIAssistant from "./AIAssistant";
 import { useAppStore } from "../stores/appStore";
 
 const Layout = ({ children }) => {
-  const { sidebarOpen } = useAppStore();
+  const { sidebarOpen, aiChatOpen } = useAppStore();
 
   return (
     <div className="h-screen bg-gray-900 flex flex-col">
@@ -30,6 +31,9 @@ const Layout = ({ children }) => {
           </main>
         </div>
       </div>
+
+      {/* AI Assistant Modal/Panel */}
+      {aiChatOpen && <AIAssistant />}
     </div>
   );
 };
