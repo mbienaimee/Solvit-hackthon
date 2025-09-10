@@ -9,6 +9,7 @@ import {
   StarIcon,
   PlusIcon,
   XMarkIcon,
+  DocumentArrowUpIcon,
 } from "@heroicons/react/24/outline";
 import { useUserStore } from "../stores/userStore";
 
@@ -16,6 +17,10 @@ const Profile = () => {
   const { user, updateProfile, addSkill, removeSkill } = useUserStore();
   const [isEditing, setIsEditing] = useState(false);
   const [newSkill, setNewSkill] = useState("");
+  const [cvFile, setCvFile] = useState(null);
+  const [cvResult, setCvResult] = useState(null);
+  const [cvLoading, setCvLoading] = useState(false);
+  const [cvError, setCvError] = useState("");
 
   const handleAddSkill = () => {
     if (newSkill.trim() && !user.skills.includes(newSkill.trim())) {
@@ -34,8 +39,112 @@ const Profile = () => {
     }
   };
 
+  const handleCVUpload = async (e) => {
+    e.preventDefault();
+    setCvError("");
+    setCvLoading(true);
+    setCvResult(null);
+    const formData = new FormData();
+    formData.append("cv", cvFile);
+    try {
+      const res = await fetch("http://localhost:3000/api/cv/analyze", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setCvResult(data);
+      } else {
+        setCvError(data.message || "CV analysis failed");
+      }
+    } catch {
+      setCvError("Network error");
+    }
+    setCvLoading(false);
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
+      {/* CV Upload & Analysis */}
+      <div className="bg-gradient-to-br from-blue-900 via-purple-900 to-gray-900 rounded-xl p-8 border border-blue-700 shadow-xl mb-8 animate-fade-in">
+        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+          <DocumentArrowUpIcon className="w-8 h-8 text-blue-400" />
+          CV Analysis & Recommendations
+        </h2>
+        <form
+          onSubmit={handleCVUpload}
+          className="flex flex-col md:flex-row gap-4 items-center mb-6"
+        >
+          <input
+            type="file"
+            accept=".txt,.pdf,.doc,.docx"
+            onChange={(e) => setCvFile(e.target.files[0])}
+            className="bg-gray-800 text-gray-200 px-4 py-3 rounded-lg border border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 shadow"
+            required
+          />
+          <button
+            type="submit"
+            disabled={cvLoading || !cvFile}
+            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold shadow-lg transition-all duration-200"
+          >
+            {cvLoading ? (
+              <span className="flex items-center gap-2">
+                <span className="loader"></span> Analyzing...
+              </span>
+            ) : (
+              "Analyze CV"
+            )}
+          </button>
+        </form>
+        {cvError && (
+          <div className="text-red-400 mb-2 font-semibold animate-shake">
+            {cvError}
+          </div>
+        )}
+        {cvResult && (
+          <div className="mt-6 bg-gray-900 rounded-xl p-6 border border-blue-800 shadow-lg animate-fade-in">
+            <h3 className="text-xl font-bold text-indigo-400 mb-4">
+              Analysis Result
+            </h3>
+            <div className="mb-4">
+              <span className="font-semibold text-white">Matched Skills:</span>
+              <span className="ml-2 text-blue-300">
+                {cvResult.keywords.length > 0
+                  ? cvResult.keywords.join(", ")
+                  : "None"}
+              </span>
+            </div>
+            {cvResult.courseSuggestion && (
+              <div className="mb-4 text-yellow-400 text-base font-medium">
+                <span className="font-semibold">Course Suggestion:</span>{" "}
+                {cvResult.courseSuggestion}
+              </div>
+            )}
+            <div className="mb-2">
+              <span className="font-semibold text-white">Recommended Jobs:</span>
+              <ul className="list-disc ml-6 mt-2 space-y-2">
+                {cvResult.recommendedJobs.length > 0 ? (
+                  cvResult.recommendedJobs.slice(0, 5).map((job, idx) => (
+                    <li key={idx} className="text-gray-200">
+                      <a
+                        href={job.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:underline font-semibold"
+                      >
+                        {job.title} at {job.company_name}
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-400">No matching jobs found</li>
+                )}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Profile Header */}
       <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
         <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
@@ -93,7 +202,9 @@ const Profile = () => {
               {user.trustScore}
             </span>
           </div>
-          <h3 className="text-lg font-semibold text-white mb-1">Trust Score</h3>
+          <h3 className="text-lg font-semibold text-white mb-1">
+            Trust Score
+          </h3>
           <p className="text-gray-400 text-sm">
             Blockchain verified credibility rating
           </p>

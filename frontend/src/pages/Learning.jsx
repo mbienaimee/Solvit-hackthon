@@ -10,7 +10,8 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon as StarSolidIcon } from "@heroicons/react/24/solid";
-import { dummyCourses } from "../data/dummyData";
+import { dummyCourses, dummyJobs } from "../data/dummyData";
+import { useLearningStore } from "../stores/learningStore";
 
 const Learning = () => {
   const [activeTab, setActiveTab] = useState("recommended");
@@ -25,28 +26,23 @@ const Learning = () => {
     { id: "soft-skills", name: "Soft Skills", count: 2 },
   ];
 
-  const myCourses = [
-    {
-      id: 1,
-      title: "Advanced React Hooks",
-      provider: "Udemy",
-      progress: 75,
-      duration: "12 hours",
-      completed: false,
-      currentLesson: "Custom Hooks Deep Dive",
-      nextLesson: "Performance Optimization",
-    },
-    {
-      id: 2,
-      title: "UI/UX Design Principles",
-      provider: "Coursera",
-      progress: 100,
-      duration: "8 hours",
-      completed: true,
-      completedDate: "2 days ago",
-      certificate: true,
-    },
-  ];
+  // Zustand store for dynamic enrollment
+  const enrolledCourses = useLearningStore((s) => s.enrolledCourses);
+  const enrollCourse = useLearningStore((s) => s.enrollCourse);
+  const getAvailableCourses = useLearningStore((s) => s.getAvailableCourses);
+  const updateCourseProgress = useLearningStore((s) => s.updateCourseProgress);
+  const completeCourse = useLearningStore((s) => s.completeCourse);
+
+  // Helper: Get recommended jobs for a course
+  function getRecommendedJobs(course) {
+    if (!course.completed) return [];
+    return dummyJobs.filter((job) => {
+      // Match by field or at least one skill
+      const fieldMatch = course.field && job.title.toLowerCase().includes(course.field.toLowerCase());
+      const skillMatch = course.skills && job.skills && course.skills.some((skill) => job.skills.includes(skill));
+      return fieldMatch || skillMatch;
+    });
+  }
 
   const achievements = [
     {
@@ -78,7 +74,7 @@ const Learning = () => {
   ];
 
   const CourseCard = ({ course, isMyCourse = false }) => (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
+  <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-white mb-2">
@@ -159,17 +155,17 @@ const Learning = () => {
             </>
           ) : (
             <>
-              <button className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+              <button className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors" onClick={() => updateCourseProgress(course.id, Math.min(course.progress + 25, 100))}>
                 Continue Learning
               </button>
-              <button className="py-2 px-4 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">
-                Pause
+              <button className="py-2 px-4 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors" onClick={() => completeCourse(course.id)}>
+                Mark Complete
               </button>
             </>
           )
         ) : (
           <>
-            <button className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+            <button className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors" onClick={() => enrollCourse(course)}>
               Enroll Now
             </button>
             <button className="py-2 px-4 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">
@@ -316,7 +312,7 @@ const Learning = () => {
 
           {/* Courses Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dummyCourses.map((course) => (
+            {getAvailableCourses().map((course) => (
               <CourseCard key={course.id} course={course} />
             ))}
           </div>
@@ -327,8 +323,31 @@ const Learning = () => {
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold text-white">My Courses</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {myCourses.map((course) => (
-              <CourseCard key={course.id} course={course} isMyCourse />
+            {enrolledCourses.map((course) => (
+              <div key={course.id}>
+                <CourseCard course={course} isMyCourse />
+                {/* Show job recommendations if course is completed */}
+                {course.completed && (
+                  <div className="mt-4 bg-gray-900 rounded-xl p-4 border border-gray-700">
+                    <h3 className="text-lg font-semibold text-green-400 mb-2">Recommended Jobs for {course.title}</h3>
+                    {getRecommendedJobs(course).length > 0 ? (
+                      <ul className="space-y-2">
+                        {getRecommendedJobs(course).map((job) => (
+                          <li key={job.id} className="bg-gray-800 rounded-lg p-3 flex flex-col md:flex-row md:items-center justify-between">
+                            <div>
+                              <span className="font-bold text-white">{job.title}</span>
+                              <span className="ml-2 text-gray-400">@ {job.company}</span>
+                            </div>
+                            <div className="text-xs text-gray-400 mt-2 md:mt-0 md:ml-4">Skills: {job.skills.join(", ")}</div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="text-gray-400">No matching jobs found for this course.</div>
+                    )}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
