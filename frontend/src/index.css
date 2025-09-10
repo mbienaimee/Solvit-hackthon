@@ -41,6 +41,19 @@
   .slide-up {
     animation: slideUp 0.4s ease-out;
   }
+
+  .card-bg {
+    background-color: #1F3131;
+    border-color: #8AB9B5;
+  }
+
+  .button-bg {
+    background-color: #8AB9B5;
+  }
+
+  .button-bg:hover {
+    background-color: rgba(138, 185, 181, 0.8);
+  }
 }
 
 @keyframes bounceIn {
@@ -87,7 +100,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-800;
+  @apply bg-custom-dark;
 }
 
 ::-webkit-scrollbar-thumb {

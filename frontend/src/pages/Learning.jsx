@@ -12,8 +12,12 @@ import {
   SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon as StarSolidIcon } from "@heroicons/react/24/solid";
-import { dummyCourses, dummyJobs } from "../data/dummyData";
+import { dummyJobs } from "../data/dummyData";
 import { useLearningStore } from "../stores/learningStore";
+import { useAppStore } from "../stores/appStore";
+import { useUserStore } from "../stores/userStore";
+import apiService from "../services/apiService";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Learning = () => {
   const [activeTab, setActiveTab] = useState("recommended");
@@ -107,7 +111,7 @@ const Learning = () => {
   }, [activeTab, user?.skills, lastRecommendations?.resources]);
 
   const ResourceCard = ({ resource }) => (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
+    <div className="bg-custom-card rounded-xl p-6 border border-custom-accent hover:border-opacity-80 transition-all duration-200">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-white mb-2">
@@ -162,17 +166,17 @@ const Learning = () => {
       <div className="flex justify-between items-center">
         <div className={`px-3 py-1 rounded-full text-xs ${
           resource.price === 'Free' || resource.price === 'Free online'
-            ? 'bg-green-600 text-green-100'
+            ? 'bg-custom-secondary text-white'
             : resource.price === 'Paid'
-            ? 'bg-blue-600 text-blue-100'
-            : 'bg-gray-600 text-gray-300'
+            ? 'bg-custom-accent text-white'
+            : 'bg-custom-tertiary text-white'
         }`}>
           {resource.price || 'Varied Price'}
         </div>
         {resource.url && (
           <button
             onClick={() => window.open(resource.url, '_blank')}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+            className="px-4 py-2 bg-custom-accent hover:bg-opacity-80 text-white text-sm rounded-lg transition-colors"
           >
             Start Learning
           </button>
@@ -182,7 +186,7 @@ const Learning = () => {
   );
 
   const CourseCard = ({ course, isMyCourse = false }) => (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
+    <div className="bg-custom-card rounded-xl p-6 border border-custom-accent hover:border-opacity-80 transition-all duration-200">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-white mb-2">
@@ -214,68 +218,79 @@ const Learning = () => {
         </div>
       </div>
 
-      {isMyCourse && (
-        <div className="space-y-6">
-          {/* Categories and Courses Grid wrapped in fragment */}
-          <>
-            <div className="flex flex-wrap gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    selectedCategory === category.id
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  }`}
-                >
-                  {category.name} ({category.count})
-                </button>
-              ))}
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {getAvailableCourses().map((course) => (
-                <CourseCard key={course.id} course={course} />
-              ))}
-            </div>
-          </>
+      <p className="text-gray-300 text-sm mb-4">{course.description}</p>
+
+      {/* Progress bar for enrolled courses */}
+      {isMyCourse && course.progress !== undefined && (
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-gray-400">Progress</span>
+            <span className="text-sm text-white font-medium">{course.progress}%</span>
+          </div>
+          <div className="w-full bg-gray-700 rounded-full h-2">
+            <div
+              className="bg-custom-accent h-2 rounded-full transition-all duration-300"
+              style={{ width: `${course.progress}%` }}
+            />
+          </div>
         </div>
-          </span>
-        ))}
-        {course.skills?.length > 3 && (
-          <span className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
-            +{course.skills.length - 3} more
-          </span>
-        )}
-      </div>
+      )}
+
+      {/* Skills */}
+      {course.skills && course.skills.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {course.skills.slice(0, 3).map((skill, index) => (
+            <span
+              key={index}
+              className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded"
+            >
+              {skill}
+            </span>
+          ))}
+          {course.skills.length > 3 && (
+            <span className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
+              +{course.skills.length - 3} more
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="flex space-x-3">
         {isMyCourse ? (
           course.completed ? (
             <>
-              <button className="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors">
+              <button className="flex-1 py-2 px-4 bg-custom-secondary hover:bg-opacity-80 text-white rounded-lg text-sm font-medium transition-colors">
                 View Certificate
               </button>
-              <button className="py-2 px-4 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">
+              <button className="py-2 px-4 border border-custom-accent text-custom-accent hover:bg-custom-accent hover:bg-opacity-20 rounded-lg text-sm font-medium transition-colors">
                 Retake
               </button>
             </>
           ) : (
             <>
-              <button className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors" onClick={() => updateCourseProgress(course.id, Math.min(course.progress + 25, 100))}>
+              <button 
+                className="flex-1 py-2 px-4 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg text-sm font-medium transition-colors" 
+                onClick={() => updateCourseProgress(course.id, Math.min(course.progress + 25, 100))}
+              >
                 Continue Learning
               </button>
-              <button className="py-2 px-4 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors" onClick={() => completeCourse(course.id)}>
+              <button 
+                className="py-2 px-4 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors" 
+                onClick={() => completeCourse(course.id)}
+              >
                 Mark Complete
               </button>
             </>
           )
         ) : (
           <>
-            <button className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors" onClick={() => enrollCourse(course)}>
+            <button 
+              className="flex-1 py-2 px-4 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg text-sm font-medium transition-colors" 
+              onClick={() => enrollCourse(course)}
+            >
               Enroll Now
             </button>
-            <button className="py-2 px-4 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">
+            <button className="py-2 px-4 border border-custom-accent text-custom-accent hover:bg-custom-accent hover:bg-opacity-20 rounded-lg text-sm font-medium transition-colors">
               Preview
             </button>
           </>
@@ -286,10 +301,10 @@ const Learning = () => {
 
   const AchievementCard = ({ achievement }) => (
     <div
-      className={`bg-gray-800 rounded-xl p-6 border transition-all duration-200 ${
+      className={`bg-custom-card rounded-xl p-6 border transition-all duration-200 ${
         achievement.earned
-          ? "border-yellow-500 bg-yellow-500 bg-opacity-10"
-          : "border-gray-700"
+          ? "border-custom-accent bg-custom-accent bg-opacity-10"
+          : "border-custom-accent border-opacity-50"
       }`}
     >
       <div className="flex items-start space-x-4">
@@ -324,7 +339,7 @@ const Learning = () => {
             <div className="flex items-center justify-between">
               <div className="flex-1 bg-gray-700 rounded-full h-2 mr-3">
                 <div
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  className="bg-custom-secondary h-2 rounded-full transition-all duration-300"
                   style={{
                     width: `${
                       (achievement.progress / achievement.total) * 100
@@ -354,26 +369,26 @@ const Learning = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-blue-400 mb-2">2</div>
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-accent mb-2">2</div>
           <div className="text-gray-400">Courses Enrolled</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-green-400 mb-2">1</div>
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-secondary mb-2">1</div>
           <div className="text-gray-400">Courses Completed</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-purple-400 mb-2">24</div>
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-tertiary mb-2">24</div>
           <div className="text-gray-400">Hours Learned</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-yellow-400 mb-2">1</div>
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-quaternary mb-2">1</div>
           <div className="text-gray-400">Achievements</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-gray-800 p-1 rounded-xl">
+      <div className="flex space-x-1 bg-custom-card p-1 rounded-xl border border-custom-accent">
         {[
           { id: "recommended", label: "Recommended", icon: BookOpenIcon },
           { id: "my-courses", label: "My Courses", icon: PlayIcon },
@@ -386,8 +401,8 @@ const Learning = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg transition-all duration-200 ${
                 activeTab === tab.id
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-400 hover:text-white hover:bg-gray-700"
+                  ? "bg-custom-accent text-white"
+                  : "text-gray-400 hover:text-white hover:bg-custom-secondary hover:bg-opacity-20"
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -434,8 +449,8 @@ const Learning = () => {
                 onClick={() => setSelectedCategory(category.id)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   selectedCategory === category.id
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    ? "bg-custom-accent text-white"
+                    : "bg-custom-secondary bg-opacity-20 text-custom-secondary hover:bg-custom-secondary hover:bg-opacity-30"
                 }`}
               >
                 {category.name} ({category.count})
@@ -449,7 +464,6 @@ const Learning = () => {
               <CourseCard key={course.id} course={course} />
             ))}
           </div>
-          </div>
         </div>
       )}
 
@@ -462,12 +476,12 @@ const Learning = () => {
                 <CourseCard course={course} isMyCourse />
                 {/* Show job recommendations if course is completed */}
                 {course.completed && (
-                  <div className="mt-4 bg-gray-900 rounded-xl p-4 border border-gray-700">
+                  <div className="mt-4 bg-custom-card rounded-xl p-4 border border-custom-accent">
                     <h3 className="text-lg font-semibold text-green-400 mb-2">Recommended Jobs for {course.title}</h3>
                     {getRecommendedJobs(course).length > 0 ? (
                       <ul className="space-y-2">
                         {getRecommendedJobs(course).map((job) => (
-                          <li key={job.id} className="bg-gray-800 rounded-lg p-3 flex flex-col md:flex-row md:items-center justify-between">
+                          <li key={job.id} className="bg-custom-card rounded-lg p-3 flex flex-col md:flex-row md:items-center justify-between border border-custom-accent border-opacity-50">
                             <div>
                               <span className="font-bold text-white">{job.title}</span>
                               <span className="ml-2 text-gray-400">@ {job.company}</span>

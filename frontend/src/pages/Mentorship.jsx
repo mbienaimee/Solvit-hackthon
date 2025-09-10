@@ -76,7 +76,7 @@ const Mentorship = () => {
   });
 
   const PlatformCard = ({ platform }) => (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
+    <div className="bg-custom-card rounded-xl p-6 border border-custom-accent hover:border-opacity-80 transition-all duration-200">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-white mb-2 flex items-center">
@@ -97,8 +97,8 @@ const Mentorship = () => {
         {platform.platformDetails?.cost && (
           <div className={`px-3 py-1 rounded-full text-xs ${
             platform.platformDetails.cost === 'Free'
-              ? 'bg-green-600 text-green-100'
-              : 'bg-blue-600 text-blue-100'
+              ? 'bg-custom-secondary text-white'
+              : 'bg-custom-accent text-white'
           }`}>
             {platform.platformDetails.cost}
           </div>
@@ -123,7 +123,7 @@ const Mentorship = () => {
       {platform.platformDetails?.url && (
         <button
           onClick={() => window.open(platform.platformDetails.url, '_blank')}
-          className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+          className="w-full px-4 py-2 bg-custom-accent hover:bg-opacity-80 text-white text-sm rounded-lg transition-colors"
         >
           Visit Platform
         </button>
@@ -134,12 +134,12 @@ const Mentorship = () => {
   // Mentor Profile Modal Component
   const MentorProfileModal = ({ mentor, onClose }) => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-custom-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-custom-accent">
         <div className="p-6">
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-start space-x-4">
-              <div className="w-20 h-20 bg-blue-600 rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-20 bg-custom-accent rounded-xl flex items-center justify-center overflow-hidden">
                 {mentor.profileImage ? (
                   <img 
                     src={mentor.profileImage} 
@@ -209,7 +209,7 @@ const Mentorship = () => {
                 {mentor.specialties.map((specialty, index) => (
                   <span
                     key={index}
-                    className="px-4 py-2 bg-blue-600/20 text-blue-400 text-sm rounded-lg border border-blue-600/30"
+                    className="px-4 py-2 bg-custom-accent bg-opacity-20 text-custom-accent text-sm rounded-lg border border-custom-accent border-opacity-30"
                   >
                     {specialty}
                   </span>
@@ -291,13 +291,13 @@ const Mentorship = () => {
             <div className="flex space-x-3">
               <button 
                 onClick={() => window.open(mentor.calendarLink, '_blank')}
-                className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                className="flex-1 px-6 py-3 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
               >
                 <CalendarIcon className="w-5 h-5" />
                 <span>Book Session Now</span>
               </button>
               <button 
-                onClick={() => window.open(`mailto:mentor+${mentor.id}@solvit.com?subject=Mentorship Inquiry`, '_blank')}
+                onClick={() => window.open(`mailto:mentor+${mentor.id}@diament.com?subject=Mentorship Inquiry`, '_blank')}
                 className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
               >
                 <ChatBubbleLeftRightIcon className="w-5 h-5" />
@@ -349,9 +349,9 @@ const Mentorship = () => {
   ];
 
   const MentorCard = ({ mentor }) => (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
+    <div className="bg-custom-card rounded-xl p-6 border border-custom-accent hover:border-opacity-80 transition-all duration-200">
       <div className="flex items-start space-x-4 mb-4">
-        <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center overflow-hidden">
+        <div className="w-16 h-16 bg-custom-accent rounded-xl flex items-center justify-center overflow-hidden">
           {mentor.profileImage ? (
             <img 
               src={mentor.profileImage} 
@@ -403,7 +403,7 @@ const Mentorship = () => {
             {mentor.specialties.slice(0, 3).map((specialty, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-blue-600/20 text-blue-400 text-xs rounded-full border border-blue-600/30"
+                className="px-3 py-1 bg-custom-secondary bg-opacity-20 text-custom-secondary text-xs rounded-full border border-custom-secondary border-opacity-30"
               >
                 {specialty}
               </span>
@@ -468,7 +468,7 @@ const Mentorship = () => {
           </button>
           <button 
             onClick={() => window.open(mentor.calendarLink, '_blank')}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-1"
+            className="px-4 py-2 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-1"
           >
             <CalendarIcon className="w-4 h-4" />
             <span>Book Session</span>
@@ -479,10 +479,10 @@ const Mentorship = () => {
   );
 
   const SessionCard = ({ session, isCompleted = false }) => (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+    <div className="bg-custom-card rounded-xl p-6 border border-custom-accent">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 bg-custom-accent rounded-lg flex items-center justify-center">
             <AcademicCapIcon className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -530,10 +530,10 @@ const Mentorship = () => {
       <div className="flex space-x-3">
         {!isCompleted ? (
           <>
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+            <button className="px-4 py-2 bg-custom-accent hover:bg-opacity-80 text-white rounded-lg text-sm font-medium transition-colors">
               Join Session
             </button>
-            <button className="px-4 py-2 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">
+            <button className="px-4 py-2 border border-custom-accent text-custom-accent hover:bg-custom-accent hover:bg-opacity-20 rounded-lg text-sm font-medium transition-colors">
               Reschedule
             </button>
           </>
@@ -560,7 +560,7 @@ const Mentorship = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-gray-800 p-1 rounded-xl">
+      <div className="flex space-x-1 bg-custom-card p-1 rounded-xl border border-custom-accent">
         {[
           { id: "find", label: "Find Mentors", icon: UserGroupIcon },
           { id: "upcoming", label: "Upcoming Sessions", icon: CalendarIcon },
@@ -577,8 +577,8 @@ const Mentorship = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg transition-all duration-200 ${
                 activeTab === tab.id
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-400 hover:text-white hover:bg-gray-700"
+                  ? "bg-custom-accent text-white"
+                  : "text-gray-400 hover:text-white hover:bg-custom-secondary hover:bg-opacity-20"
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -696,20 +696,20 @@ const Mentorship = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-blue-400 mb-2">12</div>
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-accent mb-2">12</div>
           <div className="text-gray-400">Total Sessions</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-green-400 mb-2">4.8</div>
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-secondary mb-2">4.8</div>
           <div className="text-gray-400">Average Rating</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-purple-400 mb-2">3</div>
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-tertiary mb-2">3</div>
           <div className="text-gray-400">Active Mentors</div>
         </div>
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
-          <div className="text-3xl font-bold text-yellow-400 mb-2">24</div>
+        <div className="bg-custom-card rounded-xl p-6 border border-custom-accent text-center">
+          <div className="text-3xl font-bold text-custom-quaternary mb-2">24</div>
           <div className="text-gray-400">Hours Completed</div>
         </div>
       </div>

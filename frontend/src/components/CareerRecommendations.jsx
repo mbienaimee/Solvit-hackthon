@@ -20,7 +20,7 @@ const CareerRecommendations = () => {
   const { jobs, resources, mentors, careerAdvice } = lastRecommendations;
 
   return (
-    <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 space-y-6">
+    <div className="bg-custom-card rounded-lg border border-custom-accent p-6 space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-white mb-2">Career Recommendations</h2>
         <p className="text-gray-400 text-sm">Based on our conversation and your profile</p>

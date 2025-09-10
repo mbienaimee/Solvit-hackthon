@@ -114,7 +114,7 @@ const AIAssistant = () => {
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg border border-gray-700">
+    <div className="bg-custom-card rounded-lg border border-custom-accent">
       {/* Header */}
       <div
         className="p-4 cursor-pointer hover:bg-gray-750 transition-colors"
@@ -208,7 +208,7 @@ const AIAssistant = () => {
               <button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || isAILoading}
-                className="px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                className="px-3 py-2 bg-custom-accent hover:bg-opacity-80 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
               >
                 <PaperAirplaneIcon className="w-4 h-4" />
               </button>

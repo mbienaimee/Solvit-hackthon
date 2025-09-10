@@ -8,7 +8,7 @@ const MobileHeader = () => {
   const { user } = useUserStore();
 
   return (
-    <div className="md:hidden bg-gray-800 border-b border-gray-700 px-4 py-3 flex items-center justify-between">
+    <div className="md:hidden bg-custom-accent border-b border-custom-dark px-4 py-3 flex items-center justify-between">
       <div className="flex items-center space-x-3">
         <button
           onClick={toggleSidebar}
@@ -17,7 +17,7 @@ const MobileHeader = () => {
           <Bars3Icon className="w-6 h-6 text-white" />
         </button>
         <div>
-          <h1 className="text-lg font-semibold text-white">SOLVIT</h1>
+          <h1 className="text-lg font-semibold text-white">DIAMENT</h1>
           <p className="text-xs text-gray-400">AI-Powered Employment Bridge</p>
         </div>
       </div>
@@ -31,7 +31,7 @@ const MobileHeader = () => {
         <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
           <BellIcon className="w-5 h-5 text-gray-400" />
         </button>
-        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+        <div className="w-8 h-8 bg-custom-accent rounded-full flex items-center justify-center">
           <span className="text-white text-sm font-medium">
             {user.name ? user.name.charAt(0) : 'U'}
           </span>

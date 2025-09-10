@@ -32,7 +32,7 @@ const Notifications = () => {
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+    <div className="bg-custom-card rounded-lg p-6 border border-custom-accent">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">

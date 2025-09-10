@@ -10,14 +10,14 @@ import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/react/24/solid";
 
 const AIJobCard = ({ job, onSave, onApply, isSaved = false, isApplied = false }) => {
   return (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200">
+    <div className="bg-custom-card rounded-xl p-6 border border-custom-accent hover:border-opacity-80 transition-all duration-200">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-2">
             <h3 className="text-lg font-semibold text-white">{job.title}</h3>
             {job.matchScore && (
-              <span className="bg-blue-600 text-blue-100 px-2 py-1 rounded text-xs font-medium">
+              <span className="bg-custom-tertiary text-white px-2 py-1 rounded text-xs font-medium">
                 {Math.round(job.matchScore)}% match
               </span>
             )}
@@ -45,7 +45,7 @@ const AIJobCard = ({ job, onSave, onApply, isSaved = false, isApplied = false })
           className={`p-2 rounded-lg transition-colors ${
             isSaved
               ? "text-yellow-400 bg-yellow-400/10"
-              : "text-gray-400 hover:text-yellow-400 hover:bg-gray-700"
+              : "text-gray-400 hover:text-yellow-400 hover:bg-custom-secondary"
           }`}
         >
           {isSaved ? (
@@ -61,7 +61,7 @@ const AIJobCard = ({ job, onSave, onApply, isSaved = false, isApplied = false })
 
       {/* Why Recommended */}
       {job.whyRecommended && (
-        <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-3 mb-4">
+        <div className="bg-custom-card border border-custom-accent rounded-lg p-3 mb-4">
           <p className="text-blue-300 text-sm">
             <span className="font-medium">Why this fits you: </span>
             {job.whyRecommended}
@@ -76,13 +76,13 @@ const AIJobCard = ({ job, onSave, onApply, isSaved = false, isApplied = false })
             {job.skills.slice(0, 5).map((skill, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
+                className="px-3 py-1 bg-custom-secondary bg-opacity-20 text-custom-secondary text-xs rounded-full"
               >
                 {skill}
               </span>
             ))}
             {job.skills.length > 5 && (
-              <span className="px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded-full">
+              <span className="px-3 py-1 bg-custom-secondary bg-opacity-20 text-custom-secondary text-xs rounded-full">
                 +{job.skills.length - 5} more
               </span>
             )}
@@ -148,7 +148,7 @@ const AIJobCard = ({ job, onSave, onApply, isSaved = false, isApplied = false })
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
               isApplied
                 ? "bg-green-600 text-green-100 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-custom-accent hover:bg-opacity-80 text-white"
             }`}
           >
             {isApplied ? "Applied" : "Learn More"}
