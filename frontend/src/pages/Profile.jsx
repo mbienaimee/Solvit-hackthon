@@ -141,12 +141,12 @@ const Profile = () => {
             Skills & Expertise
           </h2>
           <span className="text-gray-400 text-sm">
-            {user.skills.length} skills
+            {(user.skills || []).length} skills
           </span>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-6">
-          {user.skills.map((skill, index) => (
+          {(user.skills || []).map((skill, index) => (
             <div
               key={index}
               className="flex items-center space-x-2 bg-gray-700 px-4 py-2 rounded-lg"

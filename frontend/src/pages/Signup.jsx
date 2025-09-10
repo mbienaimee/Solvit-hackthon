@@ -1,15 +1,40 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../stores/appStore';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add registration logic here
+    setError('');
+    setSuccess('');
+    try {
+      const res = await fetch('http://localhost:3000/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: name, email, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSuccess('Signup successful! Redirecting to login...');
+        setTimeout(() => {
+          navigate('/signin');
+        }, 1200);
+        setName('');
+        setEmail('');
+        setPassword('');
+      } else {
+        setError(data.message || 'Signup failed');
+      }
+    } catch (err) {
+      setError('Network error');
+    }
   };
 
   const { theme, setTheme } = useAppStore();
@@ -85,6 +110,8 @@ const Signup = () => {
             Sign Up
           </button>
         </form>
+        {error && <div className="text-red-500 mt-2">{error}</div>}
+        {success && <div className="text-green-500 mt-2">{success}</div>}
         <p className="mt-6 text-center text-gray-600">
           Already have an account? <Link to="/signin" className="text-blue-600 font-semibold hover:underline">Sign In</Link>
         </p>

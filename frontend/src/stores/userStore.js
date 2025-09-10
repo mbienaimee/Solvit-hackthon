@@ -42,4 +42,6 @@ export const useUserStore = create((set) => ({
         skills: state.user.skills.filter((s) => s !== skill),
       },
     })),
+
+  setUser: (userData) => set(() => ({ user: userData })),
 }));
